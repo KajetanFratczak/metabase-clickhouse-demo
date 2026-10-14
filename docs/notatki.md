@@ -136,3 +136,14 @@ Klucze obce, m.in.:
 - `payments.order_id` i `reviews.order_id` -> `orders.order_id`.
 
 Utworzyłem kolekcję **Prototyp – pulpit główny**, a w niej dwie podkolekcje: **Pytania** i **Dashboardy**.
+
+## 5. Pomysły na Dashboardy
+
+Myśląc nad tym, jak ma wyglądać Pulpit Główny - wymyśliłem, że będzie posiadał odnośniki do 4 różnych Dashboardów.
+Każdy Dashboard będzie odpowiadał na inne pytania z analizy danych dla różnych potencjalnych użytkowników.
+
+Dashboardy:
+- **#1 Financial Analyst** - Sales Performance (Wartość produktów, liczba zamówień, średnia wartość zamówienia, trendy i rankingi sprzedawców, kategorii oraz miast)
+- **#2 Expansion Team** - Market Opportunities (Geograficzny rozkład zakupów, zmiany sprzedaży, średni koszyk, terminy i koszty dostaw)
+- **#3 Sellers Feedback** - Seller Performance (Wyniki wybranego sprzedawcy, najlepiej sprzedające się produkty, trendy i problemy z realizacją)
+- **#4 Customer Recommendations** - Product Discovery (Przegląd kategorii i produktów, popularność, historyczne ceny i oceny powiązanych zamówień)
