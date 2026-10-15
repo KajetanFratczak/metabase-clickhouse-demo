@@ -155,3 +155,8 @@ Aby dodać mapę Brazylii i wyświetlać stany w Brazylii - musiałem przejść 
 - https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/brazil-states.geojson
 
 sigla jako identyfikator regionu oraz name jako nazwa regionu
+
+Aby dodać filtry, zrobiłem joiny w pytaniach 00 01, 02, 03, 10, 11 (Join Customers). 05, 06, 22, 23, 24 (Join Orders + Join Customers). 
+
+## 7. Linki do dashboardów
+- http://localhost:3000/public/dashboard/397da120-de92-45f1-a2a7-33668d6a49c0

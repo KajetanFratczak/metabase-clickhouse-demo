@@ -16,6 +16,16 @@ FROM
     FROM
       `olist_raw`.`orders`
   ) AS `Orders` ON `olist_raw`.`payments`.`order_id` = `Orders`.`order_id`
+  LEFT JOIN (
+    SELECT
+      `olist_raw`.`customers`.`customer_id` AS `customer_id`,
+      `olist_raw`.`customers`.`customer_unique_id` AS `customer_unique_id`,
+      `olist_raw`.`customers`.`customer_zip_code_prefix` AS `customer_zip_code_prefix`,
+      `olist_raw`.`customers`.`customer_city` AS `customer_city`,
+      `olist_raw`.`customers`.`customer_state` AS `customer_state`
+    FROM
+      `olist_raw`.`customers`
+  ) AS `Customers` ON `Orders`.`customer_id` = `Customers`.`customer_id`
 WHERE
   (
     `olist_raw`.`payments`.`payment_type` <> 'not_defined'

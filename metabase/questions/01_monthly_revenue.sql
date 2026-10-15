@@ -16,6 +16,23 @@ FROM
     FROM
       `olist_raw`.`orders`
   ) AS `Orders` ON `olist_raw`.`order_items`.`order_id` = `Orders`.`order_id`
+  LEFT JOIN (
+    SELECT
+      `olist_raw`.`customers`.`customer_id` AS `customer_id`,
+      `olist_raw`.`customers`.`customer_unique_id` AS `customer_unique_id`,
+      `olist_raw`.`customers`.`customer_zip_code_prefix` AS `customer_zip_code_prefix`,
+      `olist_raw`.`customers`.`customer_city` AS `customer_city`,
+      `olist_raw`.`customers`.`customer_state` AS `customer_state`
+    FROM
+      `olist_raw`.`customers`
+  ) AS `Customers` ON `Orders`.`customer_id` = `Customers`.`customer_id`
+WHERE
+  (
+    `Orders`.`order_purchase_timestamp` >= `parseDateTimeBestEffort`('2017-01-01 00:00:00.000', 'UTC')
+  )
+  AND (
+    `Orders`.`order_purchase_timestamp` < `parseDateTimeBestEffort`('2018-09-01 00:00:00.000', 'UTC')
+  )
 GROUP BY
   `toStartOfMonth`(`Orders`.`order_purchase_timestamp`)
 ORDER BY
