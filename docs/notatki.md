@@ -159,4 +159,5 @@ sigla jako identyfikator regionu oraz name jako nazwa regionu
 Aby dodać filtry, zrobiłem joiny w pytaniach 00 01, 02, 03, 10, 11 (Join Customers). 05, 06, 22, 23, 24 (Join Orders + Join Customers). 
 
 ## 7. Linki do dashboardów
-- http://localhost:3000/public/dashboard/397da120-de92-45f1-a2a7-33668d6a49c0
+- http://localhost:3000/public/dashboard/397da120-de92-45f1-a2a7-33668d6a49c0  (v1)
+- http://localhost:3000/public/dashboard/f6c3b00d-c60e-4709-a9c8-987822a60d78  (v2)
