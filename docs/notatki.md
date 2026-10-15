@@ -147,3 +147,11 @@ Dashboardy:
 - **#2 Expansion Team** - Market Opportunities (Geograficzny rozkład zakupów, zmiany sprzedaży, średni koszyk, terminy i koszty dostaw)
 - **#3 Sellers Feedback** - Seller Performance (Wyniki wybranego sprzedawcy, najlepiej sprzedające się produkty, trendy i problemy z realizacją)
 - **#4 Customer Recommendations** - Product Discovery (Przegląd kategorii i produktów, popularność, historyczne ceny i oceny powiązanych zamówień)
+
+## 6. Rozwiązania małych problemów
+
+Aby dodać mapę Brazylii i wyświetlać stany w Brazylii - musiałem przejść do panelu admina i w pasku po lewej stronie dodać nową mapę korzystając z zakładki Maps.
+
+- https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/brazil-states.geojson
+
+sigla jako identyfikator regionu oraz name jako nazwa regionu
