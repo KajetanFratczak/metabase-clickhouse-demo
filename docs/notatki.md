@@ -1,4 +1,7 @@
-# Metabase + ClickHouse — pierwszy kontakt
+# Notatki projektowe – Metabase + ClickHouse
+
+Sekcje 1–7: etap 1 (14–15.10.2026) – środowisko, dane testowe Olist i dashboard Sales Performance.
+Sekcja 8: etap 2 (od 27.10.2026) – uniwersalne widoki i praca z dużymi zbiorami danych.
 
 ## 1. Uruchomienie środowiska
 
@@ -34,7 +37,7 @@ W Metabase dodaję połączenie:
 - Użytkownik do odczytu: `demo_reader`.
 - Baza: `olist_raw`.
 
-Pojawił się błąd `Invalid LZ4 magic byte: '-112'`. W **Additional JDBC connection string options / Dodatkowe opcje połączenia JDBC** trzeba było ustawić:
+Pojawił się błąd `Invalid LZ4 magic byte: '-112'` (Metabase v0.64.2.2, ClickHouse 26.9.18.11). W **Additional JDBC connection string options / Dodatkowe opcje połączenia JDBC** trzeba było ustawić:
 
 ```text
 compress=false
@@ -148,6 +151,8 @@ Dashboardy:
 - **#3 Sellers Feedback** - Seller Performance (Wyniki wybranego sprzedawcy, najlepiej sprzedające się produkty, trendy i problemy z realizacją)
 - **#4 Customer Recommendations** - Product Discovery (Przegląd kategorii i produktów, popularność, historyczne ceny i oceny powiązanych zamówień)
 
+Zrealizowany został dashboard #1. Po informacji zwrotnej prace przeszły na uniwersalne widoki niezależne od domeny (sekcja 8).
+
 ## 6. Rozwiązania małych problemów
 
 Aby dodać mapę Brazylii i wyświetlać stany w Brazylii - musiałem przejść do panelu admina i w pasku po lewej stronie dodać nową mapę korzystając z zakładki Maps.
@@ -161,3 +166,47 @@ Aby dodać filtry, zrobiłem joiny w pytaniach 00 01, 02, 03, 10, 11 (Join Custo
 ## 7. Linki do dashboardów
 - http://localhost:3000/public/dashboard/397da120-de92-45f1-a2a7-33668d6a49c0  (v1)
 - http://localhost:3000/public/dashboard/f6c3b00d-c60e-4709-a9c8-987822a60d78  (v2)
+
+## 8. Etap 2 – uniwersalne widoki
+
+Zakres prac: zestaw widoków niezależnych od domeny – przegląd danych, lista rekordów, widok rekordu, nawigacja po powiązaniach, jakość danych i podstawowe wskaźniki – oraz sprawdzenie ich działania przy dużej liczbie rekordów.
+
+### 8.1. Wzorzec: lista rekordów
+
+Przygotowałem przeglądarki zamówień, klientów i produktów.
+
+Każda składa się z:
+1. pytania z listą rekordów,
+2. pytania z liczbą wyników,
+3. dashboardu z filtrami podłączonymi do obu kart.
+
+W pytaniu listy wybieram najważniejsze kolumny i ustawiam sortowanie. Dodaję też kolumnę `Szukaj`, która łączy kilka pól tekstowych i pozwala wyszukiwać po nich jednym filtrem.
+
+Połączenia z innymi tabelami dodaję wtedy, gdy potrzebuję ich kolumn do wyświetlania lub filtrowania.
+
+Kolejną przeglądarkę przygotowuję na podstawie tego samego układu: duplikuję dashboard, podmieniam karty i ponownie podłączam filtry.
+
+| Przeglądarka | Pytania | Filtry | Wydruk |
+|---|---|---|---|
+| Zamówienia | 25, 26 | Szukaj, data zakupu, status, stan klienta, ID klienta | [PDF](dashboards/dashboard_02_orders_browser.pdf) |
+| Klienci | 27, 28, 28b | Szukaj, stan, miasto | [PDF](dashboards/dashboard_03_customers_browser.pdf) |
+| Produkty | 29, 30 | Szukaj, kategoria, waga | [PDF](dashboards/dashboard_04_products_browser.pdf) |
+
+**Co ustaliłem podczas pracy:**
+- Lista i licznik powinny reagować na te same filtry. Najłatwiej zacząć od duplikatu pytania listy i zmienić podsumowanie na liczbę wierszy.
+- Licznik nie musi wyświetlać tych samych kolumn co lista. Ważne, żeby obejmował ten sam zbiór rekordów.
+- Przy połączeniach sprawdzam, czy jeden rekord nie pojawia się kilka razy.
+- Brakujące wartości z połączonych tabel obsługuję przed połączeniem tekstu, np. przez `coalesce`. W przeciwnym razie całe `concat` może zwrócić `NULL`.
+- Kolumnę `Szukaj` zostawiam do filtrowania, ale ukrywam ją w widocznej tabeli.
+- Dla filtrów z listą rozwijaną korzystam przede wszystkim z kolumn źródłowych.
+- Ustawiam jednoznaczne sortowanie. Jeżeli pierwsza kolumna może się powtarzać, dodaję identyfikator rekordu jako drugie sortowanie.
+
+### 8.2. Ustalenia
+
+**Paginacja:** Metabase nie pobiera kolejnych stron z bazy. Filtry, sortowanie i wyszukiwanie wykonuje ClickHouse, ale do przeglądarki trafia najwyżej 2 000 wierszy (zmienna `MB_UNAGGREGATED_QUERY_ROW_LIMIT`), które karta dzieli na strony po stronie przeglądarki. Dlatego każda przeglądarka pokazuje liczbę wszystkich pasujących rekordów. Prawdziwa paginacja serwerowa wymagałaby pytania SQL z `LIMIT`/`OFFSET`.
+
+**Widok rekordu i powiązania:** kliknięcie identyfikatora otwiera wbudowaną kartę rekordu Metabase ze wszystkimi polami i powiązanymi rekordami (na podstawie kluczy ustawionych w metadanych).
+
+**Klienci w Olist:** `customer_id` jest kluczem klienta w kontekście jednego zamówienia (zawsze dokładnie 1 zamówienie), osobę identyfikuje `customer_unique_id` – 96 096 osób na 99 441 rekordów, 2 997 osób kupiło więcej niż raz (maks. 17 zamówień). Przeglądarka pokazuje rekordy tabeli i liczbę unikalnych osób.
+
+**Kategorie produktów:** 610 produktów nie ma kategorii, 13 ma kategorię bez tłumaczenia (`pc_gamer`, `portateis_cozinha_e_preparadores_de_alimentos`). Kolumna `Kategoria` pokazuje nazwę angielską, a gdy jej brak – portugalską albo „(brak kategorii)”.
