@@ -1,0 +1,13 @@
+-- Testowe zapytanie, aby zobaczyć strukturę zwracaną przez system.tables.
+SELECT * FROM system.tables LIMIT 1;
+-- database	name	uuid	engine	is_temporary	
+-- data_paths	metadata_path	metadata_modification_time	metadata_version	
+-- dependencies_database	dependencies_table	create_table_query	engine_full	as_select	
+-- parameterized_view_parameters	partition_key	sorting_key	primary_key	sampling_key	
+-- unique_key	skipping_indices_types	storage_policy	total_rows	
+-- total_bytes	total_bytes_uncompressed	parts	active_parts	
+-- total_marks	active_on_fly_data_mutations	active_on_fly_alter_mutations	
+-- active_on_fly_metadata_mutations	columns_descriptions_cache_size	lifetime_rows	
+-- lifetime_bytes	comment	has_own_data	loading_dependencies_database	
+-- loading_dependencies_table	loading_dependent_database	loading_dependent_table	target_database	
+-- target_table	definer
