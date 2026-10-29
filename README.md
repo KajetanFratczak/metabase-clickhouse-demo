@@ -128,18 +128,30 @@ Następnie **Admin settings -> Databases -> Add database -> ClickHouse**:
 | Databases | `olist_raw` lub zostawiamy wszystkie domyślnie |
 | Additional JDBC connection string options | `compress=false` |
 
+### 8. Pytania i dashboardy
 
-## Aktualny zakres i dalsze prace
+Darmowa wersja Metabase nie eksportuje pytań ani dashboardów do plików (funkcja *serialization* jest w wersjach Pro i Enterprise). Repozytorium zawiera więc SQL każdego pytania i opisy dashboardów – zasady odtwarzania są w [metabase/README.md](metabase/README.md), a wydruki dashboardów w `docs/dashboards/`.
 
-- Przygotowane środowisko i skrypty importu dziewięciu tabel.
-- Konfiguracja metadanych, relacji i pierwszych wizualizacji w Metabase.
-- Dalsze prace: rozwój dashboardów, porównanie wariantów pulpitu oraz dokumentacja wskaźników i filtrów.
+### 9. Przegląd danych (widok uniwersalny)
 
-Pytania, metadane i dashboardy są zapisywane w bazie aplikacyjnej Metabase. Skrypty importu odtwarzają tabele źródłowe; opisy wizualizacji i zrzuty ekranu będą dodawane do repozytorium w toku prac.
+Nie wymaga żadnych zmian w ClickHouse – wystarczy konto `demo_reader` z uprawnieniem SELECT. Pytania SQL z `metabase/universal/data_overview/` dodaj w Metabase (+ New → SQL query, zmienne według nagłówka pliku), a dashboard złóż według [opisu dashboardu](metabase/universal/data_overview/dashboard.md).
 
-## Notatki z pracy
+### Zatrzymanie
 
-[Przebieg konfiguracji i ustalenia](docs/notatki.md)
+- `docker compose down` – zatrzymuje usługi, dane zostają.
+- `docker compose down -v` – usuwa także wolumen ClickHouse (trzeba ponownie zaimportować dane); konfiguracja Metabase w `pg_data/` zostaje.
+
+## Stan prac
+
+**Etap 1 (14–15.10.2026):** środowisko, import danych Olist, dashboard Sales Performance ([PDF](docs/dashboards/sales_performance_v2.pdf)).
+
+**Etap 2 (od 27.10.2026) – uniwersalne widoki:**
+- przeglądarki rekordów Zamówień, Klientów i Produktów – wyszukiwarka, filtry po stronie serwera, liczba wyników, wersje z paginacją ([PDF](docs/dashboards/browser_orders.pdf)),
+- przegląd danych dla dowolnej bazy ClickHouse – tabele, rekordy, kolumny, zakresy dat, braki danych, tylko do odczytu ([PDF](docs/dashboards/data_overview.pdf)).
+
+**Dalsze prace:** rozkłady wartości (analiza jakości danych), widok szczegółowy rekordu z nawigacją po powiązaniach, pulpit główny łączący widoki, testy na dużych zbiorach danych (pomiar czasu zapytań, optymalizacje).
+
+Szczegóły i ustalenia: [docs/notatki.md](docs/notatki.md).
 
 ## Autor
 

@@ -118,9 +118,9 @@ ORDER BY name;
 
 Załadowałem dziewięć tabel. Tabela `orders` ma 99 441 wierszy.
 
-## 4. Wizualizacja danych — tworzenie dashboardów
+## 4. Metadane w Metabase
 
-Przechodzę do **Studia Danych**, gdzie mogę edytować metadane.
+Przechodzę do **Data Studio**, gdzie edytuję metadane tabel i kolumn.
 
 Dla `payments.payment_value`, `order_items.price` i `order_items.freight_value` ustawiam prezentację waluty **Brazilian Real (BRL)**.
 
@@ -161,7 +161,7 @@ Aby dodać mapę Brazylii i wyświetlać stany w Brazylii - musiałem przejść 
 
 sigla jako identyfikator regionu oraz name jako nazwa regionu
 
-Aby dodać filtry, zrobiłem joiny w pytaniach 00 01, 02, 03, 10, 11 (Join Customers). 05, 06, 22, 23, 24 (Join Orders + Join Customers). 
+Aby dodać filtry, zrobiłem joiny w pytaniach 00, 01, 02, 03, 10, 11 (Join Customers). 05, 06, 22, 23, 24 (Join Orders + Join Customers). 
 
 ## 7. Dashboard Sales Performance – wersje
 
@@ -189,9 +189,9 @@ Kolejną przeglądarkę przygotowuję na podstawie tego samego układu: duplikuj
 
 | Przeglądarka | Pytania | Filtry | Wydruk |
 |---|---|---|---|
-| Zamówienia | 25, 26; z paginacją 31, 32 | Szukaj, data zakupu, status, stan klienta, ID klienta | [PDF](dashboards/browser_orders.pdf), [z paginacją](dashboards/browser_orders_paged.pdf) |
-| Klienci | 27, 28, 28b; z paginacją 33, 34 | Szukaj, stan, miasto | [PDF](dashboards/browser_customers.pdf), [z paginacją](dashboards/browser_customers_paged.pdf) |
-| Produkty | 29, 30; z paginacją 35, 36 | Szukaj, kategoria, waga | [PDF](dashboards/browser_products.pdf), [z paginacją](dashboards/browser_products_paged.pdf) |
+| Zamówienia | 25, 26 | Szukaj, data zakupu, status, stan klienta, ID klienta | [PDF](dashboards/browser_orders.pdf), [z paginacją](dashboards/browser_orders_paged.pdf) |
+| Klienci | 27, 28, 28b | Szukaj, stan, miasto | [PDF](dashboards/browser_customers.pdf), [z paginacją](dashboards/browser_customers_paged.pdf) |
+| Produkty | 29, 30 | Szukaj, kategoria, waga | [PDF](dashboards/browser_products.pdf), [z paginacją](dashboards/browser_products_paged.pdf) |
 
 **Co ustaliłem podczas pracy:**
 - Lista i licznik powinny reagować na te same filtry. Najłatwiej zacząć od duplikatu pytania listy i zmienić podsumowanie na liczbę wierszy.
@@ -211,3 +211,33 @@ Kolejną przeglądarkę przygotowuję na podstawie tego samego układu: duplikuj
 **Klienci w Olist:** `customer_id` jest kluczem klienta w kontekście jednego zamówienia (zawsze dokładnie 1 zamówienie), osobę identyfikuje `customer_unique_id` – 96 096 osób na 99 441 rekordów, 2 997 osób kupiło więcej niż raz (maks. 17 zamówień). Przeglądarka pokazuje rekordy tabeli i liczbę unikalnych osób.
 
 **Kategorie produktów:** 610 produktów nie ma kategorii, 13 ma kategorię bez tłumaczenia (`pc_gamer`, `portateis_cozinha_e_preparadores_de_alimentos`). Kolumna `Kategoria` pokazuje nazwę angielską, a gdy jej brak – portugalską albo „(brak kategorii)”.
+
+### 8.3. Przegląd danych – wersja tylko do odczytu
+
+**PDF:** [PDF](dashboards/data_overview.pdf) · **Pytania i opis dashboardu:** `metabase/universal/data_overview/`
+
+Dashboard działa dla każdej bazy w ClickHouse bez zapisu czegokolwiek w bazie – wystarczy konto z uprawnieniem SELECT:
+- tabele, liczba rekordów, kolumny i rozmiar – z tabel systemowych ClickHouse (`system.tables`, `system.columns`), bez skanowania danych,
+- profil kolumn wybranej tabeli (braki, wartości unikalne, zakresy dat) – jedno uniwersalne zapytanie liczone na bieżąco: tabela wskazana parametrem (`merge()`), każdy wiersz zamieniany na pary kolumna–wartość (`formatRowNoNewline('JSONEachRow', *)` + `JSONExtractKeysAndValuesRaw`), więc zapytanie nie zna nazw kolumn.
+
+**Czas profilu (Olist):** orders 0,7 s, reviews 0,4 s, geolocation (1 mln wierszy) 1,0 s – koszt rośnie z liczbą wierszy × kolumn; przy setkach milionów wierszy profil trzeba będzie liczyć wcześniej i zapisywać.
+
+**Filtry z listą wartości z pytań SQL:** lista baz pochodzi z pytania `u00` (sama obejmie nowe bazy, do których konto ma uprawnienia), lista tabel z `u01`.
+
+**Problemy z jakością danych Olist wykryte przez profil:**
+- `geolocation`: współrzędne poza Brazylią (szerokość do 45°, długość do 121°) i wartość `* cidade` w nazwach miast,
+- `order_items.shipping_limit_date` sięga 2020-04-09, choć dane kończą się w 2018 r.,
+- `reviews.review_id` nie jest unikalne (98 410 wartości na 99 224 wiersze), `review_comment_title` puste w 88% wierszy,
+- 2 965 zamówień (3%) bez daty dostarczenia, 610 produktów (1,85%) bez kategorii.
+
+### 8.4. Stan prac względem zakresu etapu 2
+
+| Widok | Stan | Sekcja |
+|---|---|---|
+| Przegląd danych (tabele, rekordy, kolumny, zakresy dat, braki) | gotowe – widok uniwersalny, tylko do odczytu | 8.3 |
+| Lista rekordów (wyszukiwarka, filtry, paginacja) | gotowe – przeglądarki Zamówień, Klientów i Produktów | 8.1, 8.2 |
+| Widok szczegółowy rekordu | częściowo – wbudowana karta rekordu Metabase | 8.2 |
+| Nawigacja po powiązaniach | częściowo – przez karty rekordów (klucze w metadanych) | 8.2 |
+| Analiza jakości danych | częściowo – braki, wartości unikalne, zakresy; brak rozkładów wartości | 8.3 |
+| Podstawowe wskaźniki | gotowe – kafelki w przeglądzie danych | 8.3 |
+| Obsługa dużych zbiorów (pomiary czasu, optymalizacje) | do zrobienia | – |
