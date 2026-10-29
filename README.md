@@ -40,13 +40,19 @@ Zbiór ma kilka powiązanych tabel i pokrywa typowe obszary analiz: sprzedaż, l
 
 ## Struktura repozytorium
 ```
-├─ docker-compose.yml       usługi: ClickHouse, Metabase, PostgreSQL
-├─ .env.example             wzór pliku z hasłami (.env nie ma w repozytorium)
-├─ sql/                     tworzenie tabel i import danych do ClickHouse
-├─ metabase/questions/      SQL pytań z Metabase
+├─ docker-compose.yml          usługi: ClickHouse, Metabase, PostgreSQL
+├─ .env.example                wzór pliku z hasłami (.env nie ma w repozytorium)
+├─ sql/                        tworzenie tabel i import danych do ClickHouse
+├─ metabase/                   pytania (SQL) i opisy dashboardów Metabase
+│  ├─ domain/                  widoki na danych Olist
+│  │  ├─ sales_performance/    dashboard Sales Performance (pytania 00–24)
+│  │  └─ browsers/             przeglądarki rekordów (pytania 25–30)
+│  └─ universal/               widoki działające dla dowolnej bazy
+│     └─ data_overview/        przegląd danych (u00–u06)
 └─ docs/
-   ├─ notatki.md            ustalenia: standard / Pro / obejścia
-   └─ screenshots/          zrzuty pytań i dashboardów
+   ├─ notatki.md               ustalenia: standard / Pro / obejścia
+   ├─ dashboards/              wydruki dashboardów (PDF)
+   └─ screenshots/             zrzuty pytań, w podfolderach jak w metabase/
 ```
 
 ## Uruchomienie

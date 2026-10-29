@@ -163,9 +163,10 @@ sigla jako identyfikator regionu oraz name jako nazwa regionu
 
 Aby dodać filtry, zrobiłem joiny w pytaniach 00 01, 02, 03, 10, 11 (Join Customers). 05, 06, 22, 23, 24 (Join Orders + Join Customers). 
 
-## 7. Linki do dashboardów
-- http://localhost:3000/public/dashboard/397da120-de92-45f1-a2a7-33668d6a49c0  (v1)
-- http://localhost:3000/public/dashboard/f6c3b00d-c60e-4709-a9c8-987822a60d78  (v2)
+## 7. Dashboard Sales Performance – wersje
+
+- [Wersja 1 (PDF)](dashboards/sales_performance_v1.pdf)
+- [Wersja 2 (PDF)](dashboards/sales_performance_v2.pdf)
 
 ## 8. Etap 2 – uniwersalne widoki
 
@@ -188,9 +189,9 @@ Kolejną przeglądarkę przygotowuję na podstawie tego samego układu: duplikuj
 
 | Przeglądarka | Pytania | Filtry | Wydruk |
 |---|---|---|---|
-| Zamówienia | 25, 26 | Szukaj, data zakupu, status, stan klienta, ID klienta | [PDF](dashboards/dashboard_02_orders_browser.pdf) |
-| Klienci | 27, 28, 28b | Szukaj, stan, miasto | [PDF](dashboards/dashboard_03_customers_browser.pdf) |
-| Produkty | 29, 30 | Szukaj, kategoria, waga | [PDF](dashboards/dashboard_04_products_browser.pdf) |
+| Zamówienia | 25, 26; z paginacją 31, 32 | Szukaj, data zakupu, status, stan klienta, ID klienta | [PDF](dashboards/browser_orders.pdf), [z paginacją](dashboards/browser_orders_paged.pdf) |
+| Klienci | 27, 28, 28b; z paginacją 33, 34 | Szukaj, stan, miasto | [PDF](dashboards/browser_customers.pdf), [z paginacją](dashboards/browser_customers_paged.pdf) |
+| Produkty | 29, 30; z paginacją 35, 36 | Szukaj, kategoria, waga | [PDF](dashboards/browser_products.pdf), [z paginacją](dashboards/browser_products_paged.pdf) |
 
 **Co ustaliłem podczas pracy:**
 - Lista i licznik powinny reagować na te same filtry. Najłatwiej zacząć od duplikatu pytania listy i zmienić podsumowanie na liczbę wierszy.
