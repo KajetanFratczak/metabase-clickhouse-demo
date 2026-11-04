@@ -27,7 +27,7 @@ Pytania `u00` - `u06` działają na poziomie bazy i tabeli, `u08` - `u14` na poz
 | „### Kolumna: {{kolumna}}” | – | Text, zmienna podłączona do filtra Kolumna | 24×1 |
 | Podsumowanie kolumny | u08_podsumowanie_kolumny | Detail | 24×4 |
 | Rozkład wartości | u09_rozklad_kategorii | Row | 12×8 |
-| Statystyki liczbowe | u12_statystyki_liczbowe | Table, ukryta przy braku wyników | 12×8 |
+| Statystyki liczbowe | u12_statystyki_liczbowe | Detail, ukryta przy braku wyników | 12×8 |
 | Histogram | u10_histogram | Bar, ukryta przy braku wyników | 12×8 |
 | Rozkład w czasie | u11_rozklad_w_czasie | Line, ukryta przy braku wyników | 12×8 |
 | Powtarzające się wartości | u13_powtarzajace_sie_wartosci | Table, ukryta przy braku wyników | 12×8 |
