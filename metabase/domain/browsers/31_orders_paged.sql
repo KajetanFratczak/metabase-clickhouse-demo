@@ -15,7 +15,7 @@ FROM olist_raw.orders
 LEFT JOIN olist_raw.customers
 	ON olist_raw.orders.customer_id = olist_raw.customers.customer_id
 WHERE 1 = 1
-	[[AND positionCaseInsensitiveUTF8(concat(olist_raw.orders.order_id, ' ', olist_raw.orders.customer_id, ' ', olist_raw.customers.customer_unique_id, ' ', olist_raw.cutomers.customer_city), {{szukaj}}) > 0]]
+	[[AND positionCaseInsensitiveUTF8(concat(olist_raw.orders.order_id, ' ', olist_raw.orders.customer_id, ' ', olist_raw.customers.customer_unique_id, ' ', olist_raw.customers.customer_city), {{szukaj}}) > 0]]
 	[[AND {{status}}]]
 	[[AND {{data_zakupu}}]]
 	[[AND {{stan}}]]
