@@ -214,7 +214,7 @@ Kolejną przeglądarkę przygotowuję na podstawie tego samego układu: duplikuj
 
 ### 8.3. Przegląd danych – wersja tylko do odczytu
 
-**PDF:** [PDF](dashboards/data_overview.pdf) · **Pytania i opis dashboardu:** `metabase/universal/data_overview/`
+**PDF:** [PDF](dashboards/data_overview_v1.pdf) · **Pytania i opis dashboardu:** `metabase/universal/data_overview/`
 
 Dashboard działa dla każdej bazy w ClickHouse bez zapisu czegokolwiek w bazie – wystarczy konto z uprawnieniem SELECT:
 - tabele, liczba rekordów, kolumny i rozmiar – z tabel systemowych ClickHouse (`system.tables`, `system.columns`), bez skanowania danych,
@@ -230,7 +230,21 @@ Dashboard działa dla każdej bazy w ClickHouse bez zapisu czegokolwiek w bazie 
 - `reviews.review_id` nie jest unikalne (98 410 wartości na 99 224 wiersze), `review_comment_title` puste w 88% wierszy,
 - 2 965 zamówień (3%) bez daty dostarczenia, 610 produktów (1,85%) bez kategorii.
 
-### 8.4. Stan prac względem zakresu etapu 2
+### 8.4. Rozkłady wartości kolumny
+
+**PDF:** [kolumna tekstowa](dashboards/data_overview_v2_order_status.pdf) · [kolumna liczbowa](dashboards/data_overview_v2_product_weight_g.pdf) · [kolumna z brakami](dashboards/data_overview_v2_review_comment_title.pdf) · **Pytania:** `u08`–`u14` w `metabase/universal/data_overview/`
+
+Dla tabeli i kolumny wybranych filtrem (kliknięcie kolumny w profilu tabeli): podsumowanie kolumny, rozkład wartości (top 10 + pozostałe + braki), histogram i statystyki (kolumny liczbowe), rozkład w czasie (daty), wartości powtarzające się i najrzadsze. Zapytania są uniwersalne – wartość kolumny wyciągają z wiersza zamienionego na JSON (`JSONExtractRaw(formatRowNoNewline('JSONEachRow', *), kolumna)`), a typ kolumny sprawdzają w `system.columns`. Karty niepasujące do typu kolumny zwracają pusty wynik i są ukrywane.
+
+**Wydajność:** warunek typu kolumny w najbardziej wewnętrznym zapytaniu sprawia, że dla kolumny niepasującego typu ClickHouse w ogóle nie czyta tabeli (1,1 s → 0,006 s). Rozkład kolumny w tabeli z 1 mln wierszy liczy się w 0,3–0,5 s. Histogram obejmuje zakres od 1. do 99. percentyla, a wartości skrajne trafiają do skrajnych przedziałów.
+
+**Problemy z jakością danych:**
+- `reviews.review_id`: 789 zduplikowanych identyfikatorów, 814 nadmiarowych wierszy,
+- niespójny zapis tych samych wartości: `sao paulo` / `são paulo` w `geolocation`, „Recomendo” / „recomendo” i „Ótimo” / „Otimo” w tytułach recenzji,
+- kategorie produktów z pojedynczymi produktami (`cds_dvds_musicais` – 1, `seguros_e_servicos` – 2),
+- wagi produktów z długim ogonem (mediana 700 g, 95. percentyl 10 850 g, maksimum 40 425 g).
+
+### 8.5. Stan prac względem zakresu etapu 2
 
 | Widok | Stan | Sekcja |
 |---|---|---|
@@ -238,6 +252,6 @@ Dashboard działa dla każdej bazy w ClickHouse bez zapisu czegokolwiek w bazie 
 | Lista rekordów (wyszukiwarka, filtry, paginacja) | gotowe – przeglądarki Zamówień, Klientów i Produktów | 8.1, 8.2 |
 | Widok szczegółowy rekordu | częściowo – wbudowana karta rekordu Metabase | 8.2 |
 | Nawigacja po powiązaniach | częściowo – przez karty rekordów (klucze w metadanych) | 8.2 |
-| Analiza jakości danych | częściowo – braki, wartości unikalne, zakresy; brak rozkładów wartości | 8.3 |
+| Analiza jakości danych | gotowe – braki, wartości unikalne, zakresy, rozkłady, duplikaty, wartości rzadkie | 8.3, 8.4 |
 | Podstawowe wskaźniki | gotowe – kafelki w przeglądzie danych | 8.3 |
 | Obsługa dużych zbiorów (pomiary czasu, optymalizacje) | do zrobienia | – |

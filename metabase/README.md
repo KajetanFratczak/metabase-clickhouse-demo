@@ -7,9 +7,9 @@ Darmowa wersja Metabase nie eksportuje pytań ani dashboardów do plików (funkc
 
 ## Struktura
 
-- `domain/` – widoki na danych testowych Olist: `sales_performance/` (pytania 00–24) i `browsers/` (przeglądarki rekordów, 25–36),
-- `universal/` – widoki niezależne od domeny, działające dla każdej bazy ClickHouse: `data_overview/` (u00–u06).
-- `universal/robocze/` – zapytania robocze z etapu poznawania tabel systemowych (nieużywane na dashboardach).
+- `domain/` – widoki na danych testowych Olist: `sales_performance/` (pytania 00–24) i `browsers/` (przeglądarki rekordów, 25–30),
+- `universal/` – widoki niezależne od domeny, działające dla każdej bazy ClickHouse: `data_overview/` – poziom bazy i tabeli (u00–u06) oraz wybranej kolumny (u08–u14),
+- `universal/robocze/` – zapytania robocze z etapu poznawania tabel systemowych i pierwsza wersja najczęstszych wartości (u07), nieużywane na dashboardach.
 
 ## Odtworzenie pytania
 

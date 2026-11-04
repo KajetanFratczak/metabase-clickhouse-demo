@@ -48,7 +48,8 @@ Zbiór ma kilka powiązanych tabel i pokrywa typowe obszary analiz: sprzedaż, l
 │  │  ├─ sales_performance/    dashboard Sales Performance (pytania 00–24)
 │  │  └─ browsers/             przeglądarki rekordów (pytania 25–30)
 │  └─ universal/               widoki działające dla dowolnej bazy
-│     └─ data_overview/        przegląd danych (u00–u06)
+│     ├─ data_overview/        przegląd danych: baza i tabela (u00–u06), kolumna (u08–u14)
+│     └─ robocze/              zapytania robocze, nieużywane na dashboardach
 └─ docs/
    ├─ notatki.md               ustalenia: standard / Pro / obejścia
    ├─ dashboards/              wydruki dashboardów (PDF)
@@ -147,9 +148,9 @@ Nie wymaga żadnych zmian w ClickHouse – wystarczy konto `demo_reader` z upraw
 
 **Etap 2 (od 27.10.2026) – uniwersalne widoki:**
 - przeglądarki rekordów Zamówień, Klientów i Produktów – wyszukiwarka, filtry po stronie serwera, liczba wyników, wersje z paginacją ([PDF](docs/dashboards/browser_orders.pdf)),
-- przegląd danych dla dowolnej bazy ClickHouse – tabele, rekordy, kolumny, zakresy dat, braki danych, tylko do odczytu ([PDF](docs/dashboards/data_overview.pdf)).
+- przegląd danych dla dowolnej bazy ClickHouse – tabele, rekordy, kolumny, zakresy dat, braki danych i rozkłady wartości wybranej kolumny (najczęstsze i najrzadsze wartości, histogram, statystyki, duplikaty), tylko do odczytu ([PDF](docs/dashboards/data_overview_v2_product_weight_g.pdf), pozostałe wydruki w [opisie dashboardu](metabase/universal/data_overview/dashboard.md)).
 
-**Dalsze prace:** rozkłady wartości (analiza jakości danych), widok szczegółowy rekordu z nawigacją po powiązaniach, pulpit główny łączący widoki, testy na dużych zbiorach danych (pomiar czasu zapytań, optymalizacje).
+**Dalsze prace:** widok szczegółowy rekordu z nawigacją po powiązaniach, pulpit główny łączący widoki, testy na dużych zbiorach danych (pomiar czasu zapytań, optymalizacje).
 
 Szczegóły i ustalenia: [docs/notatki.md](docs/notatki.md).
 
