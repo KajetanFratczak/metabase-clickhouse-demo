@@ -194,10 +194,11 @@ Kolejną przeglądarkę przygotowuję na podstawie tego samego układu: duplikuj
 | Klienci — pierwotna | 27, 28, 28b | Szukaj, stan, miasto | [PDF](dashboards/browser_customers.pdf), [wersja ze stronicowaniem tabeli](dashboards/browser_customers_paged.pdf) |
 | Klienci — paginacja serwerowa | 33, 34 | Szukaj, stan, miasto, osoba, sortuj, strona | [PDF](dashboards/browser_customers_paged_paginated.pdf) |
 | Produkty — pierwotna | 29, 30 | Szukaj, kategoria, waga | [PDF](dashboards/browser_products.pdf), [wersja ze stronicowaniem tabeli](dashboards/browser_products_paged.pdf) |
+| Produkty — paginacja serwerowa | 35, 36 | Szukaj, produkt, kategoria, waga, sortuj, strona | [PDF](dashboards/browser_products_paged_paginated.pdf) |
 
 W wariancie klientów z paginacją serwerową pytanie 34 podaje zarówno liczbę rekordów (`wyniki`), jak i liczbę unikalnych osób (`osoby`) po zastosowaniu filtrów. Osobna karta 28b nie jest potrzebna w tym wariancie.
 
-Konfiguracja dashboardu klientów: [karty, filtry i nawigacja](../metabase/domain/browsers/dashboard.md).
+Konfiguracja dashboardów zamówień, klientów i produktów: [karty, filtry i nawigacja](../metabase/domain/browsers/dashboard.md).
 
 **Co ustaliłem podczas pracy:**
 - Lista i licznik powinny reagować na te same filtry. Najłatwiej zacząć od duplikatu pytania listy i zmienić podsumowanie na liczbę wierszy.
@@ -210,21 +211,19 @@ Konfiguracja dashboardu klientów: [karty, filtry i nawigacja](../metabase/domai
 
 ### 8.2. Ustalenia
 
-**Paginacja:** wcześniejsze warianty przeglądarek korzystają ze stronicowania wyników w tabeli Metabase. Pytania 31–32 (zamówienia) i 33–34 (klienci) realizują paginację po stronie ClickHouse przez `LIMIT 50 OFFSET ...`. Zmiana filtra `strona` powoduje pobranie wskazanej strony wyników.
+**Paginacja:** wcześniejsze warianty przeglądarek korzystają ze stronicowania wyników w tabeli Metabase. Pytania 31–32 (zamówienia), 33–34 (klienci) i 35–36 (produkty) realizują paginację po stronie ClickHouse przez `LIMIT 50 OFFSET ...`. Zmiana filtra `strona` powoduje pobranie wskazanej strony wyników.
 
-Pytania 32 i 34 pokazują liczbę wyników i stron, zakres rekordów oraz numery stron do nawigacji. Lista i nawigacja mają te same warunki filtrowania. Parametr `sortuj` dotyczy tylko listy.
+Pytania 32, 34 i 36 pokazują liczbę wyników i stron, zakres rekordów oraz numery stron do nawigacji. Lista i nawigacja mają te same warunki filtrowania. Parametr `sortuj` dotyczy tylko listy.
 
 Przy braku wyników nawigacja pokazuje jedną pustą stronę i komunikat „brak wyników”. Jeżeli po zmianie filtrów numer strony przekracza liczbę dostępnych stron, pojawia się komunikat z możliwością powrotu na pierwszą stronę. Numer strony nie jest automatycznie resetowany przez SQL.
 
-Paginacja serwerowa produktów (35–36) pozostaje do przygotowania.
-
-**Widok rekordu i powiązania:** kliknięcie identyfikatora otwiera wbudowaną kartę rekordu Metabase ze wszystkimi polami i powiązanymi rekordami (na podstawie kluczy ustawionych w metadanych).
+**Widok rekordu i powiązania:** we wcześniejszych przeglądarkach opartych na edytorze wizualnym wykorzystywałem wbudowane karty rekordów i powiązania z metadanych. Dla pytań SQL 31–36 konfigurację przejść do szczegółów i powiązanych rekordów traktuję jako osobny etap; opisana tutaj nawigacja dotyczy zmiany stron wyników. 
 
 **Klienci w Olist:** `customer_id` jest kluczem klienta w kontekście jednego zamówienia (zawsze dokładnie 1 zamówienie), osobę identyfikuje `customer_unique_id` – 96 096 osób na 99 441 rekordów, 2 997 osób kupiło więcej niż raz (maks. 17 zamówień). Przeglądarka pokazuje rekordy tabeli i liczbę unikalnych osób.
 
 **Filtr miasta (przeglądarka klientów):** pole `customers.customer_city` ma w metadanych typ City, a mimo to filtr typu Location nie widzi zmiennej `miasto` (Field Filter w pytaniu SQL). Filtr stanu (`customer_state`, typ State) podłączył się bez problemu. Dla miasta używam filtra **Text or Category → Is**, który działa z tą samą zmienną.
 
-**Kategorie produktów:** 610 produktów nie ma kategorii, 13 ma kategorię bez tłumaczenia (`pc_gamer`, `portateis_cozinha_e_preparadores_de_alimentos`). Kolumna `Kategoria` pokazuje nazwę angielską, a gdy jej brak – portugalską albo „(brak kategorii)”.
+**Kategorie produktów:** 610 produktów nie ma kategorii, 13 ma kategorię bez tłumaczenia (`pc_gamer`, `portateis_cozinha_e_preparadores_de_alimentos`). Kolumna `Kategoria` pokazuje nazwę angielską, a gdy jej brak – portugalską albo „(brak kategorii)”. W przeglądarce z paginacją serwerową filtr Kategoria korzysta z oryginalnej nazwy portugalskiej (`product_category_name`), a przy sortowaniu po kategorii produkty „(brak kategorii)” trafiają na koniec listy.
 
 ### 8.3. Przegląd danych – wersja tylko do odczytu
 
@@ -263,7 +262,7 @@ Dla tabeli i kolumny wybranych filtrem (kliknięcie kolumny w profilu tabeli): p
 | Widok | Stan | Sekcja |
 |---|---|---|
 | Przegląd danych (tabele, rekordy, kolumny, zakresy dat, braki) | gotowe – widok uniwersalny, tylko do odczytu | 8.3 |
-| Lista rekordów (wyszukiwarka, filtry, paginacja) | gotowe – przeglądarki Zamówień, Klientów i Produktów | 8.1, 8.2 |
+| Lista rekordów (wyszukiwarka, filtry, paginacja) | gotowe – przeglądarki Zamówień, Klientów i Produktów, paginacja po stronie ClickHouse (31–36) | 8.1, 8.2 |
 | Widok szczegółowy rekordu | częściowo – wbudowana karta rekordu Metabase | 8.2 |
 | Nawigacja po powiązaniach | częściowo – przez karty rekordów (klucze w metadanych) | 8.2 |
 | Analiza jakości danych | gotowe – braki, wartości unikalne, zakresy, rozkłady, duplikaty, wartości rzadkie | 8.3, 8.4 |
