@@ -189,9 +189,15 @@ Kolejną przeglądarkę przygotowuję na podstawie tego samego układu: duplikuj
 
 | Przeglądarka | Pytania | Filtry | Wydruk |
 |---|---|---|---|
-| Zamówienia | 25, 26 | Szukaj, data zakupu, status, stan klienta, ID klienta | [PDF](dashboards/browser_orders.pdf), [z paginacją](dashboards/browser_orders_paged.pdf) |
-| Klienci | 27, 28, 28b | Szukaj, stan, miasto | [PDF](dashboards/browser_customers.pdf), [z paginacją](dashboards/browser_customers_paged.pdf) |
-| Produkty | 29, 30 | Szukaj, kategoria, waga | [PDF](dashboards/browser_products.pdf), [z paginacją](dashboards/browser_products_paged.pdf) |
+| Zamówienia — pierwotna | 25, 26 | Szukaj, data zakupu, status, stan klienta, ID klienta | [PDF](dashboards/browser_orders.pdf), [wersja ze stronicowaniem tabeli](dashboards/browser_orders_paged.pdf) |
+| Zamówienia — paginacja serwerowa | 31, 32 | Szukaj, data zakupu, status, stan, osoba, sortuj, strona | [PDF](dashboards/browser_orders_paged_paginated.pdf) |
+| Klienci — pierwotna | 27, 28, 28b | Szukaj, stan, miasto | [PDF](dashboards/browser_customers.pdf), [wersja ze stronicowaniem tabeli](dashboards/browser_customers_paged.pdf) |
+| Klienci — paginacja serwerowa | 33, 34 | Szukaj, stan, miasto, osoba, sortuj, strona | [PDF](dashboards/browser_customers_paged_paginated.pdf) |
+| Produkty — pierwotna | 29, 30 | Szukaj, kategoria, waga | [PDF](dashboards/browser_products.pdf), [wersja ze stronicowaniem tabeli](dashboards/browser_products_paged.pdf) |
+
+W wariancie klientów z paginacją serwerową pytanie 34 podaje zarówno liczbę rekordów (`wyniki`), jak i liczbę unikalnych osób (`osoby`) po zastosowaniu filtrów. Osobna karta 28b nie jest potrzebna w tym wariancie.
+
+Konfiguracja dashboardu klientów: [karty, filtry i nawigacja](../metabase/domain/browsers/dashboard.md).
 
 **Co ustaliłem podczas pracy:**
 - Lista i licznik powinny reagować na te same filtry. Najłatwiej zacząć od duplikatu pytania listy i zmienić podsumowanie na liczbę wierszy.
@@ -204,11 +210,19 @@ Kolejną przeglądarkę przygotowuję na podstawie tego samego układu: duplikuj
 
 ### 8.2. Ustalenia
 
-**Paginacja:** Metabase nie pobiera kolejnych stron z bazy. Filtry, sortowanie i wyszukiwanie wykonuje ClickHouse, ale do przeglądarki trafia najwyżej 2 000 wierszy (zmienna `MB_UNAGGREGATED_QUERY_ROW_LIMIT`), które karta dzieli na strony po stronie przeglądarki. Dlatego każda przeglądarka pokazuje liczbę wszystkich pasujących rekordów. Prawdziwa paginacja serwerowa wymagałaby pytania SQL z `LIMIT`/`OFFSET`.
+**Paginacja:** wcześniejsze warianty przeglądarek korzystają ze stronicowania wyników w tabeli Metabase. Pytania 31–32 (zamówienia) i 33–34 (klienci) realizują paginację po stronie ClickHouse przez `LIMIT 50 OFFSET ...`. Zmiana filtra `strona` powoduje pobranie wskazanej strony wyników.
+
+Pytania 32 i 34 pokazują liczbę wyników i stron, zakres rekordów oraz numery stron do nawigacji. Lista i nawigacja mają te same warunki filtrowania. Parametr `sortuj` dotyczy tylko listy.
+
+Przy braku wyników nawigacja pokazuje jedną pustą stronę i komunikat „brak wyników”. Jeżeli po zmianie filtrów numer strony przekracza liczbę dostępnych stron, pojawia się komunikat z możliwością powrotu na pierwszą stronę. Numer strony nie jest automatycznie resetowany przez SQL.
+
+Paginacja serwerowa produktów (35–36) pozostaje do przygotowania.
 
 **Widok rekordu i powiązania:** kliknięcie identyfikatora otwiera wbudowaną kartę rekordu Metabase ze wszystkimi polami i powiązanymi rekordami (na podstawie kluczy ustawionych w metadanych).
 
 **Klienci w Olist:** `customer_id` jest kluczem klienta w kontekście jednego zamówienia (zawsze dokładnie 1 zamówienie), osobę identyfikuje `customer_unique_id` – 96 096 osób na 99 441 rekordów, 2 997 osób kupiło więcej niż raz (maks. 17 zamówień). Przeglądarka pokazuje rekordy tabeli i liczbę unikalnych osób.
+
+**Filtr miasta (przeglądarka klientów):** pole `customers.customer_city` ma w metadanych typ City, a mimo to filtr typu Location nie widzi zmiennej `miasto` (Field Filter w pytaniu SQL). Filtr stanu (`customer_state`, typ State) podłączył się bez problemu. Dla miasta używam filtra **Text or Category → Is**, który działa z tą samą zmienną.
 
 **Kategorie produktów:** 610 produktów nie ma kategorii, 13 ma kategorię bez tłumaczenia (`pc_gamer`, `portateis_cozinha_e_preparadores_de_alimentos`). Kolumna `Kategoria` pokazuje nazwę angielską, a gdy jej brak – portugalską albo „(brak kategorii)”.
 
