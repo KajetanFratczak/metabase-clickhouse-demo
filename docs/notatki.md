@@ -217,7 +217,9 @@ Pytania 32, 34 i 36 pokazują liczbę wyników i stron, zakres rekordów oraz nu
 
 Przy braku wyników nawigacja pokazuje jedną pustą stronę i komunikat „brak wyników”. Jeżeli po zmianie filtrów numer strony przekracza liczbę dostępnych stron, pojawia się komunikat z możliwością powrotu na pierwszą stronę. Numer strony nie jest automatycznie resetowany przez SQL.
 
-**Widok rekordu i powiązania:** we wcześniejszych przeglądarkach opartych na edytorze wizualnym wykorzystywałem wbudowane karty rekordów i powiązania z metadanych. Dla pytań SQL 31–36 konfigurację przejść do szczegółów i powiązanych rekordów traktuję jako osobny etap; opisana tutaj nawigacja dotyczy zmiany stron wyników. 
+**Widok rekordu i powiązania:** zgodnie z ustaleniem z p. Anną szczegóły rekordu pokazuje osobny dashboard. Pierwszy jest **Szczegóły zamówienia** (pytania 37–42): dane z datami i wskaźnikami dostawy, podsumowanie wartości, produkty, płatności i opinie. Każda sekcja to osobne pytanie, żeby wiersze się nie mnożyły. Dashboard otwiera się kliknięciem ID zamówienia w przeglądarce zamówień (Go to custom destination), a dalej prowadzi do produktu (przeglądarka produktów z filtrem Produkt) i do pozostałych zamówień tej samej osoby. Link powrotny otwiera listę z ostatnio użytymi filtrami i stroną. W pierwotnych przeglądarkach (25–30) nadal działa wbudowana karta rekordu Metabase. Konfiguracja: [opis dashboardu](../metabase/domain/order_details/dashboard.md).
+
+**Dane w widoku zamówienia:** 547 zamówień ma kilka opinii, a 789 opinii (`review_id`) jest przypisanych do kilku zamówień, więc `review_id` nie jest kluczem. W 369 zamówieniach suma płatności różni się od wartości produktów z transportem. 775 zamówień nie ma pozycji, a jedno (`bfbd0f9b…`) nie ma płatności. 2 płatności kartą mają 0 rat, a 3 płatności `not_defined` mają kwotę 0.
 
 **Klienci w Olist:** `customer_id` jest kluczem klienta w kontekście jednego zamówienia (zawsze dokładnie 1 zamówienie), osobę identyfikuje `customer_unique_id` – 96 096 osób na 99 441 rekordów, 2 997 osób kupiło więcej niż raz (maks. 17 zamówień). Przeglądarka pokazuje rekordy tabeli i liczbę unikalnych osób.
 
@@ -263,8 +265,8 @@ Dla tabeli i kolumny wybranych filtrem (kliknięcie kolumny w profilu tabeli): p
 |---|---|---|
 | Przegląd danych (tabele, rekordy, kolumny, zakresy dat, braki) | gotowe – widok uniwersalny, tylko do odczytu | 8.3 |
 | Lista rekordów (wyszukiwarka, filtry, paginacja) | gotowe – przeglądarki Zamówień, Klientów i Produktów, paginacja po stronie ClickHouse (31–36) | 8.1, 8.2 |
-| Widok szczegółowy rekordu | częściowo – wbudowana karta rekordu Metabase | 8.2 |
-| Nawigacja po powiązaniach | częściowo – przez karty rekordów (klucze w metadanych) | 8.2 |
+| Widok szczegółowy rekordu | częściowo – dashboard szczegółów zamówienia (37–42); klient i produkt do zrobienia | 8.2 |
+| Nawigacja po powiązaniach | częściowo – lista zamówień -> szczegóły -> produkt / zamówienia osoby -> powrót do listy z zachowanymi filtrami | 8.2 |
 | Analiza jakości danych | gotowe – braki, wartości unikalne, zakresy, rozkłady, duplikaty, wartości rzadkie | 8.3, 8.4 |
 | Podstawowe wskaźniki | gotowe – kafelki w przeglądzie danych | 8.3 |
 | Obsługa dużych zbiorów (pomiary czasu, optymalizacje) | do zrobienia | – |

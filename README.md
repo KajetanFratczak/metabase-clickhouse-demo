@@ -46,7 +46,8 @@ Zbiór ma kilka powiązanych tabel i pokrywa typowe obszary analiz: sprzedaż, l
 ├─ metabase/                   pytania (SQL) i opisy dashboardów Metabase
 │  ├─ domain/                  widoki na danych Olist
 │  │  ├─ sales_performance/    dashboard Sales Performance (pytania 00–24)
-│  │  └─ browsers/             przeglądarki rekordów (pytania 25–30, 28b), paginacja serwerowa zamówień (31-32), klientów (33-34) i produktów (35-36)
+│  │  ├─ browsers/             przeglądarki rekordów (pytania 25–30, 28b), paginacja serwerowa zamówień (31-32), klientów (33-34) i produktów (35-36)
+│  │  └─ order_details/        szczegóły zamówienia (pytania 37–42)
 │  └─ universal/               widoki działające dla dowolnej bazy
 │     ├─ data_overview/        przegląd danych: baza i tabela (u00–u06), kolumna (u08–u14)
 │     └─ robocze/              zapytania robocze, nieużywane na dashboardach
@@ -147,10 +148,11 @@ Nie wymaga żadnych zmian w ClickHouse – wystarczy konto `demo_reader` z upraw
 **Etap 1 (14–15.10.2026):** środowisko, import danych Olist, dashboard Sales Performance ([PDF](docs/dashboards/sales_performance_v2.pdf)).
 
 **Etap 2 (od 27.10.2026) – uniwersalne widoki:**
+- widok szczegółów zamówienia – osobny dashboard z danymi, wartościami liczonymi (czas dostawy, opóźnienie, różnica płatności), produktami, płatnościami i opiniami oraz nawigacją z listy zamówień do produktu i do zamówień tej samej osoby ([PDF](docs/dashboards/browser_orders_order_details.pdf)),
 - przeglądarki rekordów Zamówień, Klientów i Produktów – wyszukiwarka, filtry i liczba wyników; w wersjach 31–36 paginacja po stronie ClickHouse po 50 rekordów, sortowanie i karta nawigacji; dla Klientów dodatkowo liczba unikalnych osób po filtrach ([zamówienia](docs/dashboards/browser_orders_paged_paginated.pdf), [klienci](docs/dashboards/browser_customers_paged_paginated.pdf), [produkty](docs/dashboards/browser_products_paged_paginated.pdf)),
 - przegląd danych dla dowolnej bazy ClickHouse – tabele, rekordy, kolumny, zakresy dat, braki danych i rozkłady wartości wybranej kolumny (najczęstsze i najrzadsze wartości, histogram, statystyki, duplikaty), tylko do odczytu ([PDF](docs/dashboards/data_overview_v2_product_weight_g.pdf), pozostałe wydruki w [opisie dashboardu](metabase/universal/data_overview/dashboard.md)).
 
-**Dalsze prace:** widok szczegółowy rekordu z nawigacją po powiązaniach, pulpit główny łączący widoki, testy na dużych zbiorach danych (pomiar czasu zapytań, optymalizacje).
+**Dalsze prace:** widoki szczegółów klienta i produktu, pulpit główny łączący widoki (strona startowa Metabase), testy na dużych zbiorach danych (pomiar czasu zapytań, optymalizacje).
 
 Szczegóły i ustalenia: [docs/notatki.md](docs/notatki.md).
 
