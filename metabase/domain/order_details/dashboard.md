@@ -40,7 +40,7 @@ działa tylko w kartach typu Table.
 | Skąd | Kliknięcie | Dokąd |
 |---|---|---|
 | Przeglądarka zamówień (karta 31) | `order_id` | Szczegóły zamówienia, ID zamówienia ← `order_id` |
-| Produkty z zamówienia (38) | `id_produktu` | Przeglądarka produktów, Produkt ← `id_produktu` |
+| Produkty z zamówienia (38) | `id_produktu` | Szczegóły produktu, ID produktu ← `id_produktu` |
 | Przejdź do osoby (42) | `osoba` | Przeglądarka zamówień, Klient (osoba) ← `osoba` |
 | Karta z linkiem | — | Przeglądarka zamówień |
 

@@ -11,6 +11,7 @@ Darmowa wersja Metabase nie eksportuje pytań ani dashboardów do plików (funkc
   - `sales_performance/` — pytania 00–24,
   - `browsers/` — pierwotne przeglądarki 25–30 i 28b, paginacja serwerowa zamówień 31–32, klientów 33–34 i produktów 35–36; konfiguracja kart, filtrów i nawigacji w [opisie dashboardów](domain/browsers/dashboard.md),
   - `order_details/` — szczegóły zamówienia 37–42; karty, filtr i nawigacja w [opisie dashboardu](domain/order_details/dashboard.md),
+    - `product_details/` — szczegóły produktu 43–47; karty, filtr i nawigacja w [opisie dashboardu](domain/product_details/dashboard.md),
 - `universal/` – widoki niezależne od domeny, działające dla każdej bazy ClickHouse: `data_overview/` – poziom bazy i tabeli (u00–u06) oraz wybranej kolumny (u08–u14),
 - `universal/robocze/` – zapytania robocze z etapu poznawania tabel systemowych i pierwsza wersja najczęstszych wartości (u07), nieużywane na dashboardach.
 

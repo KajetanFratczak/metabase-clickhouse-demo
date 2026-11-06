@@ -219,7 +219,11 @@ Przy braku wyników nawigacja pokazuje jedną pustą stronę i komunikat „brak
 
 **Widok rekordu i powiązania:** zgodnie z ustaleniem z p. Anną szczegóły rekordu pokazuje osobny dashboard. Pierwszy jest **Szczegóły zamówienia** (pytania 37–42): dane z datami i wskaźnikami dostawy, podsumowanie wartości, produkty, płatności i opinie. Każda sekcja to osobne pytanie, żeby wiersze się nie mnożyły. Dashboard otwiera się kliknięciem ID zamówienia w przeglądarce zamówień (Go to custom destination), a dalej prowadzi do produktu (przeglądarka produktów z filtrem Produkt) i do pozostałych zamówień tej samej osoby. Link powrotny otwiera listę z ostatnio użytymi filtrami i stroną. W pierwotnych przeglądarkach (25–30) nadal działa wbudowana karta rekordu Metabase. Konfiguracja: [opis dashboardu](../metabase/domain/order_details/dashboard.md).
 
+**Szczegóły produktu** (pytania 43–47): dane i wymiary, podsumowanie sprzedaży, sprzedaż wg miesięcy, sprzedawcy i zamówienia z produktem. Dashboard otwiera się kliknięciem ID produktu w przeglądarce produktów i w szczegółach zamówienia, a lista zamówień prowadzi z powrotem do szczegółów zamówienia. Konfiguracja: [opis dashboardu](../metabase/domain/product_details/dashboard.md).
+
 **Dane w widoku zamówienia:** 547 zamówień ma kilka opinii, a 789 opinii (`review_id`) jest przypisanych do kilku zamówień, więc `review_id` nie jest kluczem. W 369 zamówieniach suma płatności różni się od wartości produktów z transportem. 775 zamówień nie ma pozycji, a jedno (`bfbd0f9b…`) nie ma płatności. 2 płatności kartą mają 0 rat, a 3 płatności `not_defined` mają kwotę 0.
+
+**Dane w widoku produktu:** każdy z 32 951 produktów ma co najmniej jedną sprzedaż. Najczęściej sprzedawany produkt ma 527 sztuk w 431 zamówieniach, więc lista zamówień produktu mieści się w limicie 2000 wierszy; przy większych zbiorach trzeba będzie ją stronicować. Ten sam produkt może mieć różne ceny u różnych sprzedawców – np. `d285360f…` kosztuje od 154,91 do 349,99, a najwięcej sztuk sprzedaje najtańszy sprzedawca. Statystyki w podsumowaniu liczą osobne podzapytania, z których każde przegląda `order_items`; przy dużych zbiorach warto zebrać je w jedno przejście.
 
 **Klienci w Olist:** `customer_id` jest kluczem klienta w kontekście jednego zamówienia (zawsze dokładnie 1 zamówienie), osobę identyfikuje `customer_unique_id` – 96 096 osób na 99 441 rekordów, 2 997 osób kupiło więcej niż raz (maks. 17 zamówień). Przeglądarka pokazuje rekordy tabeli i liczbę unikalnych osób.
 
@@ -265,8 +269,8 @@ Dla tabeli i kolumny wybranych filtrem (kliknięcie kolumny w profilu tabeli): p
 |---|---|---|
 | Przegląd danych (tabele, rekordy, kolumny, zakresy dat, braki) | gotowe – widok uniwersalny, tylko do odczytu | 8.3 |
 | Lista rekordów (wyszukiwarka, filtry, paginacja) | gotowe – przeglądarki Zamówień, Klientów i Produktów, paginacja po stronie ClickHouse (31–36) | 8.1, 8.2 |
-| Widok szczegółowy rekordu | częściowo – dashboard szczegółów zamówienia (37–42); klient i produkt do zrobienia | 8.2 |
-| Nawigacja po powiązaniach | częściowo – lista zamówień -> szczegóły -> produkt / zamówienia osoby -> powrót do listy z zachowanymi filtrami | 8.2 |
+| Widok szczegółowy rekordu | częściowo – dashboardy szczegółów zamówienia (37–42) i produktu (43–47); klient do zrobienia | 8.2 |
+| Nawigacja po powiązaniach | częściowo – lista zamówień -> szczegóły zamówienia <-> szczegóły produktu; przeglądarka produktów -> szczegóły produktu; powrót do list z zachowanymi filtrami | 8.2 |
 | Analiza jakości danych | gotowe – braki, wartości unikalne, zakresy, rozkłady, duplikaty, wartości rzadkie | 8.3, 8.4 |
 | Podstawowe wskaźniki | gotowe – kafelki w przeglądzie danych | 8.3 |
 | Obsługa dużych zbiorów (pomiary czasu, optymalizacje) | do zrobienia | – |

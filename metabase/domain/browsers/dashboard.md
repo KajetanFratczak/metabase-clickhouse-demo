@@ -234,6 +234,7 @@ Tak jak w przeglądarce klientów: dla kolumn `pierwsza`,
 Click behavior → Update a dashboard filter → Strona.
 Puste pole oznacza brak dostępnego przejścia.
 Ostatnia strona (660) zawiera jeden rekord.
+Kliknięcie `product_id` na liście otwiera dashboard Szczegóły produktu.
 
 ## Materiały
 
